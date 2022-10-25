@@ -1,0 +1,25 @@
+const fs = require('fs')
+const { sendMessage } = require('../controllers/send')
+
+const sendMessagePost = (req, res) => {
+
+    const { message, number } = req.body
+
+    //const client = req.clientWs || null;
+    const respuesta = sendMessage(number, message)
+    setTimeout(() => {
+        respuesta.then((value) => {
+            console.log(value)
+            res.send({ status: value })
+        })
+
+    }, 150);
+
+}
+
+const getQr = (req, res) => {
+    res.writeHead(200, { 'content-type': 'image/svg+xml' });
+    fs.createReadStream(`${__dirname}/../mediaSend/qr-code.svg`).pipe(res);
+}
+
+module.exports = { sendMessagePost, getQr }
